@@ -20,7 +20,9 @@ public class SettingsReader {
     List<Integer> listInt = new ArrayList<>();
     List<String> listStr = new ArrayList<>();
 
-
+    public SettingsReader(String adress) {
+        this.adress = adress;
+    }
 
     public int getWidth() {
         return width;
