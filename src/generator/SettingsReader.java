@@ -20,4 +20,25 @@ public class SettingsReader {
     List<Integer> listInt = new ArrayList<>();
     List<String> listStr = new ArrayList<>();
 
+
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getNumberVal() {
+        return numberVal;
+    }
+
+    public int getDateVal() {
+        return dateVal;
+    }
+
+    public int getFioVal() {
+        return fioVal;
+    }
 }
