@@ -1,15 +1,23 @@
 package generator;
 
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsReader {
 
-    private String adress;
+    private static final String FILENAME = "settings.xml";
 
     private int width;
     private int height;
@@ -20,70 +28,68 @@ public class SettingsReader {
     private int dateVal;
     private int fioVal;
 
-    List<Integer> listInt = new ArrayList<>();
-    List<String> listStr = new ArrayList<>();
-
-    public SettingsReader(String adress) {
-        this.adress = adress;
-    }
+    List<String> list = new ArrayList<>();
 
     public void fileReader(){
 
-        String strInt = "";
-        String str = "";
-        int c;
+        final File xmlFile = new File(FILENAME);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try {
-            FileReader read = new FileReader(adress);
+            DocumentBuilder db = dbf.newDocumentBuilder();
 
             try {
-                while ((c = read.read()) != -1 ){
+                Document doc = db.parse(FILENAME);
+                doc.getDocumentElement().normalize();
 
-                    if(Character.isDigit(c)) {
-                        strInt += (char)c;
-                        if (!str.isEmpty()) {
-                            listStr.add(str);
-                            str = "";
-                        }
-                    }
+                NodeList nodeList = doc.getElementsByTagName("page");
 
-                    else {
-                        if(!strInt.isEmpty()){
-                            listInt.add(Integer.parseInt(strInt));
-                            strInt = "";
-                        }
+                for (int i = 0; i < nodeList.getLength(); i++) {
 
-                        if(c == ' '){
-                            continue;
-                        }
-                        str += (char)c;
-
+                    Node node = nodeList.item(i);
+                    if (Node.ELEMENT_NODE == node.getNodeType()) {
+                        Element element = (Element)node;
+                        width = Integer.parseInt(element.getElementsByTagName("width")
+                                .item(0).getTextContent());
+                        height = Integer.parseInt(element.getElementsByTagName("height")
+                                .item(0).getTextContent());
                     }
 
                 }
+
+                nodeList = doc.getElementsByTagName("columns");
+                NodeList children;
+                for (int i = 0; i < nodeList.getLength(); i++){
+                    children = nodeList.item(i).getChildNodes();
+                    for (int j = 0; j < children.getLength(); j++) {
+                        Node childNode = children.item(j);
+                        if (Node.ELEMENT_NODE == childNode.getNodeType()) {
+                            Element element = (Element)childNode;
+                            list.add(element.getElementsByTagName("title")
+                                    .item(0)
+                                    .getTextContent());
+                            list.add(element.getElementsByTagName("width")
+                                    .item(0)
+                                    .getTextContent());
+                        }
+                    }
+                }
+
+            } catch (SAXException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        } catch (FileNotFoundException e) {
+        } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
 
-        if(!strInt.isEmpty())
-            listInt.add(Integer.parseInt(strInt));
-        if (!str.isEmpty())
-            listStr.add(str);
-
-        width = listInt.get(0);
-        height = listInt.get(1);
-
-        number = listStr.get(0);
-        date = listStr.get(1);
-        fio = listStr.get(2);
-
-        numberVal = listInt.get(1);
-        dateVal = listInt.get(2);
-        fioVal = listInt.get(3);
+        number = list.get(0);
+        date = list.get(2);
+        fio = list.get(4);
+        numberVal = Integer.parseInt(list.get(1));
+        dateVal = Integer.parseInt(list.get(3));
+        fioVal = Integer.parseInt(list.get(5));
 
     }
 
@@ -105,5 +111,19 @@ public class SettingsReader {
 
     public int getFioVal() {
         return fioVal;
+    }
+
+    @Override
+    public String toString() {
+        return "SettingsReader{" +
+                "width=" + width +
+                ", height=" + height +
+                ", number='" + number + '\'' +
+                ", date='" + date + '\'' +
+                ", fio='" + fio + '\'' +
+                ", numberVal=" + numberVal +
+                ", dateVal=" + dateVal +
+                ", fioVal=" + fioVal +
+                '}';
     }
 }
