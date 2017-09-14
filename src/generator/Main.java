@@ -5,7 +5,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        SettingsReader reader = new SettingsReader("settings.xml");
+        SettingsReader reader = new SettingsReader();
         reader.fileReader();
+        System.out.println(reader);
     }
 }
