@@ -21,14 +21,9 @@ public class SettingsReader {
 
     private int width;
     private int height;
-    private String number;
-    private String date;
-    private String fio;
-    private int numberVal;
-    private int dateVal;
-    private int fioVal;
 
-    List<String> list = new ArrayList<>();
+    List<String> listInt = new ArrayList<>();
+    List<String> listStr = new ArrayList<>();
 
     public void fileReader(){
 
@@ -45,8 +40,8 @@ public class SettingsReader {
                 NodeList nodeList = doc.getElementsByTagName("page");
 
                 for (int i = 0; i < nodeList.getLength(); i++) {
-
                     Node node = nodeList.item(i);
+
                     if (Node.ELEMENT_NODE == node.getNodeType()) {
                         Element element = (Element)node;
                         width = Integer.parseInt(element.getElementsByTagName("width")
@@ -61,14 +56,16 @@ public class SettingsReader {
                 NodeList children;
                 for (int i = 0; i < nodeList.getLength(); i++){
                     children = nodeList.item(i).getChildNodes();
+
                     for (int j = 0; j < children.getLength(); j++) {
                         Node childNode = children.item(j);
+
                         if (Node.ELEMENT_NODE == childNode.getNodeType()) {
                             Element element = (Element)childNode;
-                            list.add(element.getElementsByTagName("title")
+                            listStr.add(element.getElementsByTagName("title")
                                     .item(0)
                                     .getTextContent());
-                            list.add(element.getElementsByTagName("width")
+                            listInt.add(element.getElementsByTagName("width")
                                     .item(0)
                                     .getTextContent());
                         }
@@ -84,13 +81,6 @@ public class SettingsReader {
             e.printStackTrace();
         }
 
-        number = list.get(0);
-        date = list.get(2);
-        fio = list.get(4);
-        numberVal = Integer.parseInt(list.get(1));
-        dateVal = Integer.parseInt(list.get(3));
-        fioVal = Integer.parseInt(list.get(5));
-
     }
 
     public int getWidth() {
@@ -101,16 +91,12 @@ public class SettingsReader {
         return height;
     }
 
-    public int getNumberVal() {
-        return numberVal;
+    public List<String> getListInt() {
+        return listInt;
     }
 
-    public int getDateVal() {
-        return dateVal;
-    }
-
-    public int getFioVal() {
-        return fioVal;
+    public List<String> getListStr() {
+        return listStr;
     }
 
     @Override
@@ -118,12 +104,12 @@ public class SettingsReader {
         return "SettingsReader{" +
                 "width=" + width +
                 ", height=" + height +
-                ", number='" + number + '\'' +
-                ", date='" + date + '\'' +
-                ", fio='" + fio + '\'' +
-                ", numberVal=" + numberVal +
-                ", dateVal=" + dateVal +
-                ", fioVal=" + fioVal +
+                ", number='" + listStr.get(0) + '\'' +
+                ", date='" + listStr.get(1) + '\'' +
+                ", fio='" + listStr.get(2) + '\'' +
+                ", numberVal=" + listInt.get(0) +
+                ", dateVal=" + listInt.get(1) +
+                ", fioVal=" + listInt.get(2) +
                 '}';
     }
 }
