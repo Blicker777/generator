@@ -25,7 +25,7 @@ public class DateReader {
         dateList = new ArrayList<>();
 
         try {
-            List<String> list = Files.readAllLines(Paths.get(adress), StandardCharsets.UTF_8);
+            List<String> list = Files.readAllLines(Paths.get(adress), StandardCharsets.UTF_16);
             System.out.println(list);
 
             for (String str: list) {
