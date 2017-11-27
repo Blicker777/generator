@@ -15,7 +15,6 @@ public class DateReader {
     private String adress;
 
     private List<List<String>> dateList;
-    private List<String> listString;
 
     public DateReader(String adress) {
         this.adress = adress;
@@ -24,7 +23,6 @@ public class DateReader {
     public List<List<String>> fileReaderString() {
 
         dateList = new ArrayList<>();
-
 
         try {
             List<String> list = Files.readAllLines(Paths.get(adress), StandardCharsets.UTF_8);
@@ -53,15 +51,18 @@ public class DateReader {
 
     public List<String> readerString(String stra) {
 
-        listString = new ArrayList<>();
+        List<String> listString = new ArrayList<>();
         String str = "";
 
 
         for (int i = 0; i < stra.length(); i++) {
 
-            if (stra.charAt(i) == ' ') {
+            if (stra.charAt(i) == ' ' || stra.charAt(i) == '\t') {
 
                 if (!str.isEmpty()) {
+                    if(listString.size() > NUMBERCOlUMNDATE - 2)
+                        break;
+
                     listString.add(str);
                     str = "";
                 }
@@ -76,6 +77,8 @@ public class DateReader {
         if (!str.isEmpty())
             listString.add(str);
 
+        System.out.println(listString);
+
         return listString;
 
     }
@@ -83,4 +86,5 @@ public class DateReader {
     public List<List<String>> getDateList() {
         return dateList;
     }
+
 }
