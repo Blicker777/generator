@@ -23,7 +23,7 @@ public class SettingsReader {
     private int height;
 
     List<String> listInt = new ArrayList<>();
-    List<String> listStr = new ArrayList<>();
+    List<StringBuffer> listStr = new ArrayList<>();
 
     public void fileReader(){
 
@@ -62,9 +62,9 @@ public class SettingsReader {
 
                         if (Node.ELEMENT_NODE == childNode.getNodeType()) {
                             Element element = (Element)childNode;
-                            listStr.add(element.getElementsByTagName("title")
+                            listStr.add(new StringBuffer(element.getElementsByTagName("title")
                                     .item(0)
-                                    .getTextContent());
+                                    .getTextContent()));
                             listInt.add(element.getElementsByTagName("width")
                                     .item(0)
                                     .getTextContent());
@@ -95,7 +95,7 @@ public class SettingsReader {
         return listInt;
     }
 
-    public List<String> getListStr() {
+    public List<StringBuffer> getListStr() {
         return listStr;
     }
 

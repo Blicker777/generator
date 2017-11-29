@@ -14,13 +14,13 @@ public class DateReader {
 
     private String adress;
 
-    private List<List<String>> dateList;
+    private List<List<StringBuffer>> dateList;
 
     public DateReader(String adress) {
         this.adress = adress;
     }
 
-    public List<List<String>> fileReaderString() {
+    public List<List<StringBuffer>> fileReaderString() {
 
         dateList = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class DateReader {
 
         for (int i = 0; i < dateList.size(); i++){
             while(dateList.get(i).size() < NUMBERCOlUMNDATE){
-                dateList.get(i).add("");
+                dateList.get(i).add(new StringBuffer(""));
             }
         }
 
@@ -49,33 +49,33 @@ public class DateReader {
     }
 
 
-    public List<String> readerString(String stra) {
+    public List<StringBuffer> readerString(String stra) {
 
-        List<String> listString = new ArrayList<>();
-        String str = "";
+        List<StringBuffer> listString = new ArrayList<>();
+        StringBuffer str = new StringBuffer();
 
 
         for (int i = 0; i < stra.length(); i++) {
 
             if (stra.charAt(i) == ' ' || stra.charAt(i) == '\t') {
 
-                if (!str.isEmpty()) {
+                if (str.length() != 0) {
                     if(listString.size() > NUMBERCOlUMNDATE - 2)
                         break;
 
-                    listString.add(str);
-                    str = "";
+                    listString.add(new StringBuffer(str));
+                    str.setLength(0);
                 }
 
                 continue;
             }
 
-            str += stra.charAt(i);
+            str.append(stra.charAt(i));
 
         }
 
-        if (!str.isEmpty())
-            listString.add(str);
+        if (str.length() != 0)
+            listString.add(new StringBuffer(str));
 
         System.out.println(listString);
 
@@ -83,7 +83,7 @@ public class DateReader {
 
     }
 
-    public List<List<String>> getDateList() {
+    public List<List<StringBuffer>> getDateList() {
         return dateList;
     }
 

@@ -11,28 +11,21 @@ public class Generator {
     private final int NUMBER = 3;
 
     private String adress;
-    private String remainderStr = "";
+    private StringBuffer remainderStr;
     private int numString = 1;
-    private List<List<String>> titleList = new ArrayList<>();
-    private List<List<String>> listList  = new ArrayList<List<String>>();
-    private List<String> list = new ArrayList<>();
+    private List<List<StringBuffer>> titleList = new ArrayList<>();
+    private List<List<StringBuffer>> listList  = new ArrayList<>();
+    private List<StringBuffer> list = new ArrayList<>();
     private char ch = '~';
     private boolean bool;
 
     public Generator(String adress) {
         this.adress = adress;
     }
-    public List<List<String>> getListList() {
-        return listList;
-    }
-
-
 
     public void generatorText(DateReader dateReader, SettingsReader settingsReader) {
 
-        String title = "";
         String separator = "";
-        int height = settingsReader.getHeight();
 
         int num = Integer.parseInt(settingsReader.getListInt().get(0)) +
                 Integer.parseInt(settingsReader.getListInt().get(1)) +
@@ -46,15 +39,13 @@ public class Generator {
             FileWriter writer = new FileWriter("result.txt", false);
 
             listColumn(settingsReader.getListStr(), settingsReader);
-            for (List<String> list: listList) {
-                titleList.add(new ArrayList<String>(list));
+            for (List<StringBuffer> list: listList) {
+                titleList.add(new ArrayList<StringBuffer>(list));
             }
             generatorString(settingsReader, writer, separator);
             listList.clear();
 
             for (int i = 0; i < dateReader.getDateList().size(); i++) {
-                if(i == dateReader.getDateList().size() - 1)
-                    bool = false;
                 listColumn(dateReader.getDateList().get(i), settingsReader);
                 generatorString(settingsReader, writer, separator);
                 listList.clear();
@@ -99,7 +90,7 @@ public class Generator {
 
     private void generatorString(SettingsReader settingsReader, FileWriter writer, String separator) {
 
-        String str = "";
+        StringBuffer str = new StringBuffer();
         int max = listList.get(0).size();
         int height = settingsReader.getHeight();
 
@@ -110,12 +101,12 @@ public class Generator {
 
         for (int i = 0; i < NUMBER; i++){
             for (int j = 0; j < Integer.parseInt(settingsReader.getListInt().get(i)); j++) {
-                str += " ";
+                str.append(" ");
             }
             while (listList.get(i).size() < max) {
-                listList.get(i).add(str);
+                listList.get(i).add(new StringBuffer(str));
             }
-            str = "";
+            str.setLength(0);
         }
 
         try {
@@ -134,17 +125,17 @@ public class Generator {
 
                 }
 
-                str = ("| ");
+                str.append("| ");
 
                 for (int j = 0; j < NUMBER; j++) {
 
-                    str += listList.get(j).get(i) + " | ";
+                    str.append(listList.get(j).get(i)).append(" | ");
 
                 }
 
                 writer.write(str + "\n");
                 System.out.print(str);
-                str = "";
+                str.setLength(0);
 
                 System.out.print(numString++);
                 System.out.println();
@@ -167,12 +158,10 @@ public class Generator {
 
     }
 
-    private void listColumn(List<String> listExample, SettingsReader settingsReader) {
+    private void listColumn(List<StringBuffer> listExample, SettingsReader settingsReader) {
 
-        List<String> listString;
-        String string;
+        StringBuffer string;
         int numStr;
-        boolean size = true;
 
         for (int i = 0; i < NUMBER; i++) {
 
@@ -181,22 +170,22 @@ public class Generator {
             if(listExample.size() > NUMBER && i == 2) {
 
                 generatorColumn(listExample.get(i), numStr);
-                listList.add(new ArrayList<String>(list));
+                listList.add(new ArrayList<StringBuffer>(list));
                 list.clear();
                 string = remainderStr;
 
                 for(int j = 3; j < listExample.size(); j++) {
 
                     if(listExample.get(j).length() <= numStr - remainderStr.length() - 1) {
-                        generatorColumn(string + " " + listExample.get(j), numStr);
+                        generatorColumn(string.append(listExample.get(j)), numStr);
                         listList.get(i).set(listList.get(i).size() - 1, list.get(list.size() - 1));
                         list.clear();
                         string = remainderStr;
                     }
                     else {
                         generatorColumn(listExample.get(j), numStr);
-                        for (String str: list) {
-                            listList.get(i).add(str);
+                        for (StringBuffer str: list) {
+                            listList.get(i).add(new StringBuffer(str));
                         }
                         list.clear();
                         string = remainderStr;
@@ -207,29 +196,30 @@ public class Generator {
             }
 
             generatorColumn(listExample.get(i), numStr);
-            listList.add(new ArrayList<String>(list));
+            listList.add(new ArrayList<StringBuffer>(list));
             list.clear();
-            remainderStr = "";
+            remainderStr.setLength(0);
 
         }
 
     }
 
-    private String generatorColumn(String str, int num){
+    private String generatorColumn(StringBuffer str, int num){
 
-        String stringDate = "";
+        StringBuffer stringDate = new StringBuffer();
 
-        if(str.isEmpty()) {
+
+        if(str.length() == 0) {
             return "";
         }
 
         if(str.length() <= num) {
-            stringDate = str;
+            stringDate= str;
             remainderStr = str;
             for (int i = str.length(); i < num; i++) {
-                stringDate += " ";
+                stringDate.append(" ");
             }
-            list.add(stringDate);
+            list.add(new StringBuffer(stringDate));
 
             return "";
         }
@@ -237,14 +227,14 @@ public class Generator {
         if(str.length() > num) {
 
             for (int i = 0; i < num; i++) {
-                stringDate += str.charAt(i);
+                stringDate.append(str.charAt(i));
             }
 
-            list.add(stringDate);
-            stringDate = "";
+            list.add(new StringBuffer(stringDate));
+            stringDate.setLength(0);
 
             for(int i = num; i < str.length(); i++) {
-                stringDate += str.charAt(i);
+                stringDate.append(str.charAt(i));
             }
 
         }
@@ -252,5 +242,10 @@ public class Generator {
         return generatorColumn(stringDate, num);
 
     }
+
+    public List<List<StringBuffer>> getListList() {
+        return listList;
+    }
+
 
 }
