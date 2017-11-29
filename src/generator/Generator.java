@@ -46,10 +46,10 @@ public class Generator {
             FileWriter writer = new FileWriter("result.txt", false);
 
             listColumn(settingsReader.getListStr(), settingsReader);
-            generatorString(settingsReader, writer, separator);
             for (List<String> list: listList) {
                 titleList.add(new ArrayList<String>(list));
             }
+            generatorString(settingsReader, writer, separator);
             listList.clear();
 
             for (int i = 0; i < dateReader.getDateList().size(); i++) {
@@ -121,13 +121,17 @@ public class Generator {
         try {
             for (int i = 0; i < max; i++) {
 
-                if(numString == height * (int)(numString/height)) {
+                if(numString == height * (int)(numString/height) + 1) {
 
-                    System.out.println(ch);
-                    writer.write(ch + "\n");
-                    showString(writer);
-                    System.out.println(separator);
-                    writer.write(separator + "\n");
+                    if(numString != 1) {
+
+                        System.out.println(ch);
+                        writer.write(ch + "\n");
+                        showString(writer);
+                        System.out.println(separator);
+                        writer.write(separator + "\n");
+                    }
+
                 }
 
                 str = ("| ");
@@ -147,7 +151,7 @@ public class Generator {
 
             }
 
-            if(numString == height * (int)(numString/height)) {
+            if(numString == height * (int)(numString/height) + 1) {
                 return;
             }
 
